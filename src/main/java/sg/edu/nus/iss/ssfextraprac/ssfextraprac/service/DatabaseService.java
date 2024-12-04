@@ -115,7 +115,8 @@ public class DatabaseService {
         // SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS zzz");
         // String formattedDate = sdf.format(date);
 
-        
+        // long millisecondsSinceEpoch = System.currentTimeMillis();
+        // long secondsSinceEpoch = Instant.now().getEpochSecond();
 
 
 
@@ -138,6 +139,43 @@ public class DatabaseService {
     }
 
     public void saveTask(Task task) {
+       
         taskRepo.setHash(ConstantVar.redisKey, task.getId(), task.toString());
+    }
+
+    public Boolean deleteTask(String id) {
+        return taskRepo.deleteKeyFromHash(ConstantVar.redisKey, id);
+    }
+
+
+    public Task getTaskById(String id) {
+        String rawIndividualUserData = taskRepo.getValueFromHash(ConstantVar.redisKey, id);
+
+        String[] rawData = rawIndividualUserData.split(",");
+
+    
+        String name = rawData[1];
+        String description = rawData[2];
+        String dueDateString = rawData[3];
+
+        Long dueDateLong = Long.valueOf(dueDateString);
+        Date dueDate = new Date(dueDateLong);
+
+        
+        String priority = rawData[4];
+        String status = rawData[5];
+
+        Date createdAt = new Date(Long.valueOf(rawData[6]));
+        Date updatedAt = new Date(Long.valueOf(rawData[7]));
+        Task task = new Task();
+        task.setId(id);
+        task.setName(name);
+        task.setDescription(description);
+        task.setDueDate(dueDate);
+        task.setPriority(priority);
+        task.setStatus(status);
+        task.setCreatedAt(createdAt);
+        task.setUpdatedAt(updatedAt);
+        return task;
     }
 }
