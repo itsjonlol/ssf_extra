@@ -22,6 +22,9 @@ public class SsfextrapracApplication  implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 
 		List<Task> tasks = databaseService.readFile("todos.json");
+		for (Task task : tasks) {
+			databaseService.saveTask(task);
+		}
 		
 	}
 

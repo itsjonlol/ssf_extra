@@ -15,9 +15,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + name + "," + description + "," + dueDate
-                + "," + priority + "," + status + "," + createdAt + ","
-                + updatedAt;
+        return id + "," + name + "," + description + "," + dueDate.getTime()
+                + "," + priority + "," + status + "," + createdAt.getTime() + ","
+                + updatedAt.getTime();
     }
 
     public String getId() {
