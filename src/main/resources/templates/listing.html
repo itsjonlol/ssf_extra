@@ -10,9 +10,22 @@
     <!-- <button class = "btn btn-primary">
         <a th:href="@{/persons/create}">Create</a>
     </button> -->
+    <!-- <div th:if="${httpsession == null}">
+        <p>Please register <a th:href="@{/login}">here</a> </p>
+    </div> -->
 
+    <div class = "col-lg-3">
+        <a th:href="@{/tasks/logout}" class = "btn btn-primary btn-sm mb-3">Logout</a>
+    </div>
+    
+    <!-- <div th:if="${httpsession!=null}"> -->
+    
+        
 
-    <div class = "container">
+    <div th:if="${httpsession !=null }"   class = "container">
+        <div class = "row">
+            <h1>Hello <Strong th:text="${httpsession}"></Strong></h1>
+        </div>
         <div class = "row">
             <h1>List of tasks</h1>
         </div>
@@ -90,6 +103,7 @@
         </tbody>
     </table>
 </div>
+<!-- </div> -->
     
 </body>
 </html>

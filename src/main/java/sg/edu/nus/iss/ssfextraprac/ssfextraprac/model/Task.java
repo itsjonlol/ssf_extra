@@ -34,7 +34,9 @@ public class Task {
     @NotEmpty(message = "Status cannot be empty")
     private String status;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
     public Task() {
@@ -57,7 +59,8 @@ public class Task {
         this.dueDate = dueDate;
         this.priority = priority;
         this.status = status;
-        this.createdAt = new Date(System.currentTimeMillis());
+        this.createdAt = createdAt;
+        
     }
 
 

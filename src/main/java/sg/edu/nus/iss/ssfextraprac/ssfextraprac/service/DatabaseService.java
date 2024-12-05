@@ -178,4 +178,8 @@ public class DatabaseService {
         task.setUpdatedAt(updatedAt);
         return task;
     }
+
+    public void updateTask(Task task) {
+        taskRepo.updateValue(ConstantVar.redisKey,task.getId(),task.toString() );
+    }
 }
