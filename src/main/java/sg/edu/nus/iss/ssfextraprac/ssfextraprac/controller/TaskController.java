@@ -53,7 +53,7 @@ public class TaskController {
         List<Task> filteredTasks = databaseService.filterTaskByStatus(status);
         
         model.addAttribute("tasks", filteredTasks);
-        model.addAttribute("currentstatus",status);
+        // model.addAttribute("currentstatus",status);
         Boolean sessionExists = true;
         model.addAttribute("sessionexists",sessionExists);
         String username = (String) session.getAttribute("username");

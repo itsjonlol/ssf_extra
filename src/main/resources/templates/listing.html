@@ -39,10 +39,10 @@
         <form method="POST" th:action="@{/tasks/listing/filter}">
             <label>Filter by status</label>
             <select name = "filteredstatus" onchange="this.form.submit()">
-                <option th:value="completed" th:selected="${currentStatus == 'completed'}">Completed</option>
-                <option th:value="in_progress" th:selected="${currentStatus == 'in_progress'}">In Progress</option>
-                <option th:value="pending" th:selected="${currentStatus == 'pending'}">Pending</option>
-                <option th:value="all" th:selected="${currentStatus == 'all'}">All</option>
+                <option th:value="completed" >Completed</option>
+                <option th:value="in_progress" >In Progress</option>
+                <option th:value="pending" >Pending</option>
+                <option th:value="all" >All</option>
             </select>
             <button type = "submit">Filter</button>
 

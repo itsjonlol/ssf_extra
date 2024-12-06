@@ -27,6 +27,7 @@ public class DatabaseService {
     @Autowired
     TaskRepo taskRepo;
     //refer to readFile2 function -> this is not adding the jsonobjects directly
+    //initial tasklist gathered from reading file
     public List<Task> readFile(String fileName) throws IOException, ParseException {
 
         ClassPathResource resource = new ClassPathResource(fileName);
@@ -73,6 +74,7 @@ public class DatabaseService {
     }
     //for when i want to save jsonobject directly after reading a file.
     //i created a new jsonobject to account for changing date from string to long
+    //initial tasklist gathered from reading file
     public List<Task> readFile2(String fileName) throws IOException, ParseException {
 
         ClassPathResource resource = new ClassPathResource(fileName);
@@ -192,6 +194,7 @@ public class DatabaseService {
 
     }
     //convert jsonstringformat to json object -> extract values and make a task
+    //i have a separate getAllTasks to pull the values from redis.
     public List<Task> getAllTasks2() {
         List<Object> objectList = taskRepo.getAllValuesFromHash(ConstantVar.redisKey);
         List<Task> tasks = new ArrayList<>();
