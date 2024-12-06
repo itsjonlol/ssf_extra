@@ -59,23 +59,10 @@ public class TaskController {
         String username = (String) session.getAttribute("username");
         model.addAttribute("username", username);
 
-//         The filterTaskByStatus method is invoked, where:
-// It fetches the filtered tasks using databaseService.filterTaskByStatus(status).
-// It updates the "tasks" model attribute with the filtered list.
-// It also adds the "currentstatus" attribute to remember the selected filter for the dropdown.
-// Rendering the Filtered Tasks:
-
-// The listing.html template will render the updated "tasks" list because the POST handler immediately returns the listing view with the filtered data.
-        //just like how you update the error message
         return "listing"; //cannot redirect here because it will go back to the original
     }
 
-//     Session Data (HttpSession):
-// The session indeed keeps the data (e.g., username, age) stored on the server side. It's tied to the user's session and will remain until the session expires or is invalidated.
-// Example: session.getAttribute("username") will always retrieve the value if it was set earlier.
-// Model Attributes (Model):
-// The Model is used to pass data from the controller to the view for a single request.
-// It is not persistent and does not automatically include session data unless you explicitly add it to the model in your controller method.
+
     
     @GetMapping("/register")
     public String registerTask(Model model) {
@@ -116,7 +103,7 @@ public class TaskController {
         if (result.hasErrors()) {
             return "registerupdate";
         }
-        task.setUpdatedAt(new Date(System.currentTimeMillis()));
+        task.setUpdatedAt(new Date(System.currentTimeMillis())); // update the time
         databaseService.saveTask2(task);
 
         // databaseService.saveTask(task);
@@ -129,7 +116,21 @@ public class TaskController {
         return "redirect:/login";
     }
     
+    // The filterTaskByStatus method is invoked, where:
+    // It fetches the filtered tasks using databaseService.filterTaskByStatus(status).
+    // It updates the "tasks" model attribute with the filtered list.
+    // It also adds the "currentstatus" attribute to remember the selected filter for the dropdown.
+    // Rendering the Filtered Tasks:
     
+    // The listing.html template will render the updated "tasks" list because the POST handler immediately returns the listing view with the filtered data.
+            //just like how you update the error message
+
+            //     Session Data (HttpSession):
+// The session indeed keeps the data (e.g., username, age) stored on the server side. It's tied to the user's session and will remain until the session expires or is invalidated.
+// Example: session.getAttribute("username") will always retrieve the value if it was set earlier.
+// Model Attributes (Model):
+// The Model is used to pass data from the controller to the view for a single request.
+// It is not persistent and does not automatically include session data unless you explicitly add it to the model in your controller method.
     
 
     

@@ -26,7 +26,7 @@ public class DatabaseService {
     
     @Autowired
     TaskRepo taskRepo;
-
+    //refer to readFile2 function -> this is not adding the jsonobjects directly
     public List<Task> readFile(String fileName) throws IOException, ParseException {
 
         ClassPathResource resource = new ClassPathResource(fileName);
@@ -138,7 +138,7 @@ public class DatabaseService {
         return tasks;
         
     }
-    
+    //saving to redis using task.toString(). refer to getAllTasks2()
     public List<Task> getAllTasks() {
         List<Object> objectList = taskRepo.getAllValuesFromHash(ConstantVar.redisKey);
         List<Task> tasks = new ArrayList<>();
@@ -212,13 +212,8 @@ public class DatabaseService {
             Long createdAtLong = dataJson.getJsonNumber("created_at").longValue();
             Long updatedAtLong = dataJson.getJsonNumber("updated_at").longValue();
             
-
-            // Long dueDateLong = Long.valueOf(due_dateString);
+           
             Date dueDate = new Date(dueDateLong);
-
-            // Long createdAtLong = Long.valueOf(created_atString);
-            // Long updatedAtLong = Long.valueOf(updated_atString);
-
             Date createdAt = new Date(createdAtLong);
             Date updatedAt = new Date(updatedAtLong);
 
@@ -251,7 +246,7 @@ public class DatabaseService {
         return tasks;
         
     }
-    //converting task to string
+    //converting task to string (task.tostring()) -> use saveTask2 instead
     public void saveTask(Task task) {
        
         taskRepo.setHash(ConstantVar.redisKey, task.getId(), task.toString());
@@ -278,7 +273,7 @@ public class DatabaseService {
         return taskRepo.deleteKeyFromHash(ConstantVar.redisKey, id);
     }
 
-    //task.tostring method
+    //task.tostring method -> refer to getTaskById2 instead
     public Task getTaskById(String id) {
         String rawIndividualUserData = taskRepo.getValueFromHash(ConstantVar.redisKey, id);
 
@@ -344,7 +339,7 @@ public class DatabaseService {
         return task;
     }
 
-    public void updateTask(Task task) {
-        taskRepo.updateValue(ConstantVar.redisKey,task.getId(),task.toString() );
-    }
+    // public void updateTask(Task task) {
+    //     taskRepo.updateValue(ConstantVar.redisKey,task.getId(),task.toString() );
+    // }
 }
