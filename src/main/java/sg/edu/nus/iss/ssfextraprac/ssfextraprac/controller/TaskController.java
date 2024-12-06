@@ -33,13 +33,15 @@ public class TaskController {
 
     @GetMapping("/listing")
     public String showListing(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
-        List<Task> tasks = databaseService.getAllTasks();
+        List<Task> tasks = databaseService.getAllTasks2();
         model.addAttribute("tasks",tasks);
         
         if (session.getAttribute("username") == null) {
             return "invalid";
         }
-        model.addAttribute("httpsession",(String) session.getAttribute("username"));
+        Boolean sessionExists = true;
+        model.addAttribute("sessionexists",sessionExists);
+        model.addAttribute("username",(String) session.getAttribute("username"));
 
         return "listing";
     }
@@ -52,8 +54,10 @@ public class TaskController {
         
         model.addAttribute("tasks", filteredTasks);
         model.addAttribute("currentstatus",status);
+        Boolean sessionExists = true;
+        model.addAttribute("sessionexists",sessionExists);
         String username = (String) session.getAttribute("username");
-        model.addAttribute("httpsession", username);
+        model.addAttribute("username", username);
 
 //         The filterTaskByStatus method is invoked, where:
 // It fetches the filtered tasks using databaseService.filterTaskByStatus(status).
@@ -65,6 +69,13 @@ public class TaskController {
         //just like how you update the error message
         return "listing"; //cannot redirect here because it will go back to the original
     }
+
+//     Session Data (HttpSession):
+// The session indeed keeps the data (e.g., username, age) stored on the server side. It's tied to the user's session and will remain until the session expires or is invalidated.
+// Example: session.getAttribute("username") will always retrieve the value if it was set earlier.
+// Model Attributes (Model):
+// The Model is used to pass data from the controller to the view for a single request.
+// It is not persistent and does not automatically include session data unless you explicitly add it to the model in your controller method.
     
     @GetMapping("/register")
     public String registerTask(Model model) {
@@ -92,7 +103,7 @@ public class TaskController {
 
     @GetMapping("/update/{taskid}")
     public String updateUser(@PathVariable("taskid") String id ,Model model) {
-        Task task  = databaseService.getTaskById(id);
+        Task task  = databaseService.getTaskById2(id);
         model.addAttribute("task",task);
 
 
@@ -106,7 +117,7 @@ public class TaskController {
             return "registerupdate";
         }
         task.setUpdatedAt(new Date(System.currentTimeMillis()));
-        databaseService.updateTask(task);
+        databaseService.saveTask2(task);
 
         // databaseService.saveTask(task);
         return "redirect:/tasks/listing";

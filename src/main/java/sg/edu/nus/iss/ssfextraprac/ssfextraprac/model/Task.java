@@ -17,7 +17,7 @@ public class Task {
 
     @NotNull(message = "Name cannot be null")
     @NotEmpty(message = "Name cannot be empty")
-    @Pattern(regexp = "^[a-zA-Z\s]+$",message = "Name cannot contain numbers")
+    
     @Size(min = 10, max = 50, message = "Name must be inbetween 10 and 50 characters")
     private String name;
 

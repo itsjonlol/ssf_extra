@@ -22,9 +22,9 @@
     
         
 
-    <div th:if="${httpsession !=null }"   class = "container">
+    <div th:if="${sessionexists}"   class = "container">
         <div class = "row">
-            <h1>Hello <Strong th:text="${httpsession}"></Strong></h1>
+            <h1>Hello <Strong th:text="${username}"></Strong></h1>
         </div>
         <div class = "row">
             <h1>List of tasks</h1>

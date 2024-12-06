@@ -21,10 +21,11 @@ public class SsfextrapracApplication  implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 
-		List<Task> tasks = databaseService.readFile("todos.json");
-		for (Task task : tasks) {
-			databaseService.saveTask(task);
-		}
+		// List<Task> tasks = databaseService.readFile("todos.json");
+		// for (Task task : tasks) {
+		// 	databaseService.saveTask2(task);
+		// }
+		List<Task> tasks = databaseService.readFile2("todos.json");
 		
 	}
 

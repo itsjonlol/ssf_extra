@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.ssfextraprac.ssfextraprac.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -38,6 +39,7 @@ public class DatabaseService {
 
         for (int i = 0; i<tasksJsonArray.size(); i++) {
             JsonObject individualTaskJson = tasksJsonArray.getJsonObject(i);
+
             Task task = new Task();
             String id = individualTaskJson.getString("id");
             String name = individualTaskJson.getString("name");
@@ -58,6 +60,73 @@ public class DatabaseService {
             task.setStatus(status);
             Date created_at_date = sdf.parse(created_at);
             Date updated_at_date = sdf.parse(updated_at);
+            task.setCreatedAt(created_at_date);
+            task.setUpdatedAt(updated_at_date);
+            tasks.add(task);
+            
+            // events.add(event);
+            
+        }
+
+        return tasks;
+        
+    }
+    //for when i want to save jsonobject directly after reading a file.
+    //i created a new jsonobject to account for changing date from string to long
+    public List<Task> readFile2(String fileName) throws IOException, ParseException {
+
+        ClassPathResource resource = new ClassPathResource(fileName);
+        InputStream is = resource.getInputStream();
+        JsonReader reader = Json.createReader(is);
+        JsonArray tasksJsonArray = reader.readArray();
+
+        List<Task> tasks = new ArrayList<>();
+
+        
+        
+        
+
+        for (int i = 0; i<tasksJsonArray.size(); i++) {
+            JsonObject individualTaskJson = tasksJsonArray.getJsonObject(i);
+            String id = individualTaskJson.getString("id");
+            String name = individualTaskJson.getString("name");
+            String description = individualTaskJson.getString("description");
+            String due_date = individualTaskJson.getString("due_date");
+            String priority_level = individualTaskJson.getString("priority_level");
+            String status = individualTaskJson.getString("status");
+            String created_at = individualTaskJson.getString("created_at");
+            String updated_at = individualTaskJson.getString("updated_at");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, MM/dd/YYYY");
+            Date dueDate = sdf.parse(due_date);
+            Date created_at_date = sdf.parse(created_at);
+            Date updated_at_date = sdf.parse(updated_at);
+
+            JsonObject individualTaskJsonFormatted = Json.createObjectBuilder()
+                                                        .add("id",id)
+                                                        .add("name",name)
+                                                        .add("description",description)
+                                                        .add("due_date",dueDate.getTime())
+                                                        .add("priority_level",priority_level)
+                                                        .add("status",status)
+                                                        .add("created_at",created_at_date.getTime())
+                                                        .add("updated_at",updated_at_date.getTime())
+                                                        .build();
+
+
+            taskRepo.setHash(ConstantVar.redisKey, individualTaskJson.getString("id"), individualTaskJsonFormatted.toString());
+
+            Task task = new Task();
+            
+            
+            task.setId(id);
+            task.setName(name);
+            task.setDescription(description);
+            
+            task.setDueDate(dueDate);
+            task.setPriority(priority_level);
+            task.setStatus(status);
+            
             task.setCreatedAt(created_at_date);
             task.setUpdatedAt(updated_at_date);
             tasks.add(task);
@@ -102,6 +171,8 @@ public class DatabaseService {
             tasks.add(task);
         }
         return tasks;
+
+        
         
 
 
@@ -119,11 +190,54 @@ public class DatabaseService {
         // long secondsSinceEpoch = Instant.now().getEpochSecond();
 
 
+    }
+    //convert jsonstringformat to json object -> extract values and make a task
+    public List<Task> getAllTasks2() {
+        List<Object> objectList = taskRepo.getAllValuesFromHash(ConstantVar.redisKey);
+        List<Task> tasks = new ArrayList<>();
 
+        for (Object data : objectList) {
+            String dataJsonString = (String) data;
+            InputStream is = new ByteArrayInputStream(dataJsonString.getBytes());
+            JsonReader reader = Json.createReader(is);
+            JsonObject dataJson = reader.readObject();
+            Task task = new Task();
+
+            String id = dataJson.getString("id");
+            String name = dataJson.getString("name");
+            String description = dataJson.getString("description");
+            Long dueDateLong = dataJson.getJsonNumber("due_date").longValue();
+            String priority_level = dataJson.getString("priority_level");
+            String status = dataJson.getString("status");
+            Long createdAtLong = dataJson.getJsonNumber("created_at").longValue();
+            Long updatedAtLong = dataJson.getJsonNumber("updated_at").longValue();
+            
+
+            // Long dueDateLong = Long.valueOf(due_dateString);
+            Date dueDate = new Date(dueDateLong);
+
+            // Long createdAtLong = Long.valueOf(created_atString);
+            // Long updatedAtLong = Long.valueOf(updated_atString);
+
+            Date createdAt = new Date(createdAtLong);
+            Date updatedAt = new Date(updatedAtLong);
+
+            task.setId(id);
+            task.setName(name);
+            task.setDescription(description);
+            task.setDueDate(dueDate);
+            task.setPriority(priority_level);
+            task.setStatus(status);
+            task.setCreatedAt(createdAt);
+            task.setUpdatedAt(updatedAt);
+            tasks.add(task);
+            
+        }
+        return tasks;
     }
     
     public List<Task> filterTaskByStatus(String status) {
-        List<Task> tasks = this.getAllTasks();
+        List<Task> tasks = this.getAllTasks2();
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
             if (task.getStatus().equals(status)) {
@@ -137,17 +251,34 @@ public class DatabaseService {
         return tasks;
         
     }
-
+    //converting task to string
     public void saveTask(Task task) {
        
         taskRepo.setHash(ConstantVar.redisKey, task.getId(), task.toString());
+    }
+    //convert task to taskjsonobject
+    //converting taskjsonobject to string
+    public void saveTask2(Task task) {
+
+        
+        JsonObject taskJsonObject = Json.createObjectBuilder()
+                                                .add("id",task.getId())
+                                                .add("name",task.getName())
+                                                .add("description",task.getDescription())
+                                                .add("due_date",task.getDueDate().getTime())
+                                                .add("priority_level",task.getPriority())
+                                                .add("status",task.getStatus())
+                                                .add("created_at",task.getCreatedAt().getTime())
+                                                .add("updated_at",task.getUpdatedAt().getTime())
+                                                .build();
+        taskRepo.setHash(ConstantVar.redisKey, task.getId(), taskJsonObject.toString());
     }
 
     public Boolean deleteTask(String id) {
         return taskRepo.deleteKeyFromHash(ConstantVar.redisKey, id);
     }
 
-
+    //task.tostring method
     public Task getTaskById(String id) {
         String rawIndividualUserData = taskRepo.getValueFromHash(ConstantVar.redisKey, id);
 
@@ -173,6 +304,40 @@ public class DatabaseService {
         task.setDescription(description);
         task.setDueDate(dueDate);
         task.setPriority(priority);
+        task.setStatus(status);
+        task.setCreatedAt(createdAt);
+        task.setUpdatedAt(updatedAt);
+        return task;
+    }
+    //convert taskjsonstring to taskjsonobject to task
+    public Task getTaskById2(String id) {
+        String IndividualUserDataJsonString = taskRepo.getValueFromHash(ConstantVar.redisKey, id);
+
+        
+        InputStream is = new ByteArrayInputStream(IndividualUserDataJsonString.getBytes());
+        JsonReader reader = Json.createReader(is);
+        JsonObject dataJson = reader.readObject();
+
+    
+        String name = dataJson.getString("name");
+        String description = dataJson.getString("description");
+        Long dueDateLong = dataJson.getJsonNumber("due_date").longValue();
+        String priority_level = dataJson.getString("priority_level");
+        String status = dataJson.getString("status");
+        Long createdAtLong = dataJson.getJsonNumber("created_at").longValue();
+        Long updatedAtLong = dataJson.getJsonNumber("updated_at").longValue();
+
+        Date dueDate = new Date(dueDateLong);
+        Date createdAt = new Date(createdAtLong);
+        Date updatedAt = new Date(updatedAtLong);
+        
+
+        Task task = new Task();
+        task.setId(id);
+        task.setName(name);
+        task.setDescription(description);
+        task.setDueDate(dueDate);
+        task.setPriority(priority_level);
         task.setStatus(status);
         task.setCreatedAt(createdAt);
         task.setUpdatedAt(updatedAt);
