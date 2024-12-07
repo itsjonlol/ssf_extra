@@ -22,19 +22,17 @@ public class LoginController {
     public String postLogin(@RequestParam(required=false,name="username") String username,
     @RequestParam(required=false,name="age") String age,HttpSession session,RedirectAttributes redirectAttributes
     ,Model model) {
-        System.out.println(username);
-        System.out.println(age);
+        if (Integer.valueOf(age)<10) {
+            model.addAttribute("errorMessage","You must be older than 10 to view the website");
+            return "login";
+        }
+    
         session.setAttribute("username", username);
         session.setAttribute("age", age);
         Boolean sessionExists = true;
         model.addAttribute("sessionexists",sessionExists);
         
-        if (Integer.valueOf(age)<10) {
-            session.removeAttribute("username");
-            session.removeAttribute("age");
-            model.addAttribute("errorMessage","You must be older than 10 to view the website");
-            return "login";
-        }
+
         return "redirect:/tasks/listing";
     }
     
