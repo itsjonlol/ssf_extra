@@ -38,7 +38,7 @@
 
         <form method="POST" th:action="@{/tasks/listing/filter}">
             <label>Filter by status</label>
-            <select name = "filteredstatus" onchange="this.form.submit()">
+            <select name = "filteredstatus" >
                 <option th:value="completed" >Completed</option>
                 <option th:value="in_progress" >In Progress</option>
                 <option th:value="pending" >Pending</option>

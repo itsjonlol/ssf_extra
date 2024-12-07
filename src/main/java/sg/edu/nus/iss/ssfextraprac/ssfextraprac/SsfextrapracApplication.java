@@ -9,11 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import sg.edu.nus.iss.ssfextraprac.ssfextraprac.model.Task;
 import sg.edu.nus.iss.ssfextraprac.ssfextraprac.service.DatabaseService;
+import sg.edu.nus.iss.ssfextraprac.ssfextraprac.service.ProductService;
 
 @SpringBootApplication
 public class SsfextrapracApplication  implements CommandLineRunner{
 	@Autowired
 	DatabaseService databaseService;
+
+	@Autowired
+	ProductService productService;
 	public static void main(String[] args) {
 		SpringApplication.run(SsfextrapracApplication.class, args);
 	}
@@ -25,7 +29,17 @@ public class SsfextrapracApplication  implements CommandLineRunner{
 		// for (Task task : tasks) {
 		// 	databaseService.saveTask2(task);
 		// }
+		//for task example
 		List<Task> tasks = databaseService.readFile2("todos.json");
+
+		//for product example
+		//i only want to read the file once. so if you delete the rediskey, and restart the program. starts back from zero.
+		if (!productService.doesRedisKeyExist()) {
+			productService.readFile("products.json");
+
+		}
+		
+
 		
 	}
 
