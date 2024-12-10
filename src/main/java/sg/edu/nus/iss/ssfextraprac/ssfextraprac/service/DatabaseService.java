@@ -1,6 +1,9 @@
 package sg.edu.nus.iss.ssfextraprac.ssfextraprac.service;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -34,6 +37,14 @@ public class DatabaseService {
         InputStream is = resource.getInputStream();
         JsonReader reader = Json.createReader(is);
         JsonArray tasksJsonArray = reader.readArray();
+
+        //method 2
+        // File file = new File("./src/main/java/sg/edu/nus/iss/ssfextraprac" + fileName);
+        // File file = new File("src/main/java/sg/edu/nus/iss/ssfextraprac" + fileName);
+        // FileReader fr = new FileReader(file);
+        // BufferedReader br = new BufferedReader(fr);
+        // JsonReader reader = Json.createReader(br);
+        // JsonArray tasksJsonArray = reader.readArray();
 
         List<Task> tasks = new ArrayList<>();
         

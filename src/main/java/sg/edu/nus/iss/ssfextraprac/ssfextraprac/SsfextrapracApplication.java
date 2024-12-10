@@ -30,7 +30,9 @@ public class SsfextrapracApplication  implements CommandLineRunner{
 		// 	databaseService.saveTask2(task);
 		// }
 		//for task example
-		List<Task> tasks = databaseService.readFile2("todos.json");
+		List<Task> tasks = databaseService.readFile2("data/todos.json");
+		//if want to put in resources/data
+		// List<Task> tasks = databaseService.readFile2("data/todos.json");
 
 		//for product example
 		//i only want to read the file once. so if you delete the rediskey, and restart the program. starts back from zero.
