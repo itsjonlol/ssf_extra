@@ -27,7 +27,7 @@ public class ProductService {
 
     @Autowired
     TaskRepo taskRepo;
-
+    //read file and put into redis. store productjsonobject -> productjsonobjectstring
     public void readFile(String fileName) throws IOException, ParseException {
 
         ClassPathResource resource = new ClassPathResource(fileName);
@@ -49,7 +49,8 @@ public class ProductService {
 
         
     }
-
+    //list of productjsonobjectstring -> list of productjsonobject -> product -> list<product>
+    
     public List<Product> getAllProducts() {
       
         List<Object> objectList = taskRepo.getAllValuesFromHash(ConstantVar.redisKeyProduct);
@@ -92,7 +93,7 @@ public class ProductService {
         return products;
     
     }
-
+    //product -> productjsonobject -> productjsonobjectstring
     public void saveProduct(Product product) {
         
         // private Integer id;
@@ -122,7 +123,7 @@ public class ProductService {
                                                 .build();
         taskRepo.setHash(ConstantVar.redisKeyProduct, String.valueOf(product.getId()), productJsonObject.toString());
     }
-
+    //productjsonobjectstring -> productjsonobject -> product
     public Product getProductById(String id) {
 
         String IndividualProductJsonString = taskRepo.getValueFromHash(ConstantVar.redisKeyProduct, id);
