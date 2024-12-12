@@ -16,6 +16,8 @@ COPY mvnw .
 COPY mvnw.cmd .
 COPY .mvn .mvn
 COPY src src
+#if adding from outisde main folder
+#COPY todos2.json .
 
 # Ensure the mvnw script has execution permissions
 RUN chmod +x mvnw
@@ -40,7 +42,8 @@ ARG DEPLOY_DIR=/code_folder
 WORKDIR ${DEPLOY_DIR}
 
 COPY --from=compiler /app/target/ssfextraprac-0.0.1-SNAPSHOT.jar ssfextraprac.jar
-
+# if you need to copy the file from outside
+#COPY --from=compiler /app/todos2.json .
 # Set the server port
 ENV SERVER_PORT=4000
 

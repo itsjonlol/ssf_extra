@@ -30,7 +30,7 @@ public class SsfextrapracApplication  implements CommandLineRunner{
 		// 	databaseService.saveTask2(task);
 		// }
 		//for task example
-		List<Task> tasks = databaseService.readFile2("data/todos.json");
+		List<Task> tasks = databaseService.readFile2("todos.json");
 		//if want to put in resources/data
 		// List<Task> tasks = databaseService.readFile2("data/todos.json");
 
